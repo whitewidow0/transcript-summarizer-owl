@@ -9,43 +9,55 @@ const Index = () => {
   const [summary, setSummary] = useState<any>(null);
   const { toast } = useToast();
 
+  const extractVideoId = (url: string) => {
+    const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+  };
+
   const handleSubmit = async (url: string) => {
     setIsLoading(true);
+    const videoId = extractVideoId(url);
+    
+    if (!videoId) {
+      toast({
+        title: "Invalid URL",
+        description: "Could not extract video ID from the provided URL",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    // For demonstration, generate a mock summary
+    // In production, this would make an actual API call
     try {
-      // Mock API call for now - replace with actual API integration
-      const response = await fetch('https://api.example.com/summarize', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url }),
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      setSummary({
+        mainTopic: "Demo Summary for Video " + videoId,
+        keyPoints: [
+          "This is a demonstration of the summary feature",
+          "The actual API integration needs to be implemented",
+          "You can replace this with real API calls to your backend",
+          "The video ID extracted is: " + videoId
+        ],
+        conclusion: "This is a placeholder summary. To get real summaries, you'll need to implement the backend API integration."
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to generate summary');
-      }
-
-      // Simulated response for now
-      setTimeout(() => {
-        setSummary({
-          mainTopic: "Understanding React Hooks",
-          keyPoints: [
-            "Hooks allow function components to use state and lifecycle features",
-            "useState is the most basic Hook for managing component state",
-            "useEffect handles side effects in function components",
-            "Custom Hooks enable reuse of stateful logic between components"
-          ],
-          conclusion: "React Hooks provide a more direct way to use state and side effects in function components, making the code cleaner and more reusable."
-        });
-        setIsLoading(false);
-      }, 2000);
-
+      toast({
+        title: "Summary Generated",
+        description: "Demo summary has been created successfully",
+      });
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to generate summary. Please try again.",
         variant: "destructive",
       });
+      console.error("Error generating summary:", error);
+    } finally {
       setIsLoading(false);
     }
   };
