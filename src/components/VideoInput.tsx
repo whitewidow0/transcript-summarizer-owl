@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface VideoInputProps {
   onSubmit: (url: string) => void;
@@ -25,22 +27,26 @@ const VideoInput = ({ onSubmit, isLoading }: VideoInputProps) => {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
-      <div className="relative group">
-        <input
-          type="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="Paste YouTube URL here..."
-          className="w-full px-6 py-4 bg-white bg-opacity-5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-300 backdrop-blur-sm"
-          disabled={isLoading}
-        />
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors duration-300 disabled:opacity-50"
-        >
-          Summarize
-        </button>
+      <div className="relative group animate-fade-up">
+        <div className="p-4 bg-white/10 backdrop-blur-lg rounded-xl border border-white/20 shadow-xl">
+          <div className="flex gap-2">
+            <Input
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="Paste YouTube URL here..."
+              className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50"
+              disabled={isLoading}
+            />
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="bg-white/20 hover:bg-white/30 text-white border-0"
+            >
+              Summarize
+            </Button>
+          </div>
+        </div>
       </div>
     </form>
   );
